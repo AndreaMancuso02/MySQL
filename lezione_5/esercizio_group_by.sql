@@ -59,12 +59,13 @@ order by `Numero Iscritti` desc;
 select
 	d.cognome,
     d.nome,
-    count(*) `Corsi`
+    count(c.id) `Corsi Assegnati`
 from docenti d
-join corsi c
-on d.docente_id = c.id
+left join corsi c
+on d.docente_id = c.docente_id
 group by d.docente_id, d.cognome, d.nome
-order by `Corsi` desc;
+order by `Corsi Assegnati` desc;
+
 -- 7)
 -- Calcola il valore totale delle iscrizioni per ciascun corso, sommando il prezzo pagato da tutti gli studenti iscritti.
 -- Mostra il titolo del corso e la somma totale.
@@ -97,6 +98,13 @@ order by `Spesa Totale` desc;
 -- ricordatevi della funzione grouping() e dell'istruzione with rollup
 -- la tabelle risultante mostrerà i seguenti attributi, con le righe in più dei subtotali e del totale
 -- Regione, Genere, Quanti
+select
+	if(grouping(provincia), 'totale', provincia) as Provincia,
+	if(grouping(genere), 'totale genere', genere) as Genere,
+    count(*) `Quanti`
+from studenti
+group by provincia, genere
+with rollup;
 
 
 -- 10) Calcola età media degli studenti divisi per regione
